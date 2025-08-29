@@ -16,6 +16,7 @@ This application can now be deployed to Vercel. Here's what has been configured:
 ### 1. Database Setup
 - Set up a PostgreSQL database (recommended: Neon Database)
 - Get the connection string (DATABASE_URL)
+- Run database migrations: `npm run db:push` (after setting DATABASE_URL locally)
 
 ### 2. Environment Variables
 Set these environment variables in Vercel:
@@ -57,3 +58,9 @@ This creates:
 - `dist/public/` - Frontend static files
 - `dist/index.js` - Backend bundle (for reference)
 - `api/index.ts` - Serverless function for Vercel
+
+## Troubleshooting:
+
+1. **Database Connection Issues**: Ensure DATABASE_URL is set correctly in Vercel environment variables
+2. **API Routes Not Working**: Check that `/api/*` requests are being routed correctly 
+3. **Build Failures**: Ensure all dependencies are listed in package.json (not just devDependencies)
