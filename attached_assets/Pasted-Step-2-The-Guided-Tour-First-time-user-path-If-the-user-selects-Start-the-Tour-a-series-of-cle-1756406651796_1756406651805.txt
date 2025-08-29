@@ -1,0 +1,86 @@
+Step 2: The Guided Tour (First-time user path)
+If the user selects "Start the Tour," a series of clear, simple tooltips will highlight each section of the builder.
+Persona Tooltip: "Tell the AI what role to play (e.g., 'Act as a financial advisor')."
+Task Tooltip: "Give the AI a clear task to perform (e.g., 'Summarize the article')."
+Context Tooltip: "Provide all the necessary background info for the task."
+Format Tooltip: "Specify how you want the AI's response to be structured (e.g., 'Use a bulleted list')."
+After the tour, the user is presented with a celebratory message like, "You're all set! Now, let's build your first prompt."
+
+Step 3: Main Builder Interface & Template Selection
+Regardless of whether they took the tour or skipped it, the user arrives at the main builder page. The interface is divided into two key areas: the manual builder and the template library.
+Manual Builder (Top Section)
+This is the core of the tool with four distinct, clearly labeled input fields:
+Persona: With a hint like "e.g., Act as a fact-checker..."
+Task: With a hint like "e.g., Analyze the claims in the following text..."
+Context: A large text area for pasting information.
+Format: With a hint like "e.g., Respond with a list of facts."
+As the user fills in these fields, a Live Prompt Preview will automatically update on the side of the screen, showing the complete, combined prompt.
+Template Library (Bottom Section)
+Below the manual builder, a section titled "Start from a Template" provides a visual, card-based library of common use cases. Each card has an icon and a clear title, such as "Fact-Check a News Article," "Create a Study Guide," or "Draft a Social Media Post."
+When a user clicks on a template card, the following happens instantly:
+The builder fields are automatically populated with pre-structured information.
+For example, clicking "Fact-Check a News Article" populates the fields like this:
+Persona: "Act as a professional journalist and fact-checker."
+Task: "Analyze the following article for accuracy and identify any potential misinformation."
+Context: The field is blank, with a hint saying "Paste the full article text here."
+Format: "Provide a bulleted list of verifiable facts, a list of claims that need further investigation, and a concluding summary of your findings."
+This approach gives users a concrete starting point, saving them the effort of starting from scratch and immediately demonstrating what a high-quality prompt looks like in practice.
+
+Framing the "Aha!" Moment: UX/UI Solution
+This solution is designed to transform the simple act of clicking a button into a moment of anticipation and discovery. The goal is to make the user's progress feel significant, leading to a satisfying reveal of their hard work.
+
+UI/UX Flow
+The Trigger: After a user has finished building their structured prompt, the "Analyze Impact" button becomes the primary call-to-action. It's designed to be visually prominent, perhaps with a different color or a subtle pulsing animation to draw the user's eye and encourage them to click.
+Building Anticipation: The moment the user clicks the button, the screen is taken over by a full-screen, visually engaging animation.
+Loading Animation: A central element, such as a stylized gear, a spinning brain icon, or a series of dots connecting to form a network, is animated.
+Engaging Text: A dynamic message appears below the animation, not just "Loading." The text changes in a sequence to match the "thinking" process, for example:
+"Analyzing your prompt..."
+"Generating a generic version..."
+"Calculating the impact..."
+"Preparing the side-by-side comparison..."
+This short, intentional pause with visual and textual cues builds excitement and frames the upcoming results as something valuable, not just a quick function output.
+The Reveal: After the animation completes, the screen seamlessly transitions to the Impact Analyzer display. The two outputs appear simultaneously, presented side-by-side. The transition is designed to feel like a curtain being pulled back, revealing the powerful difference between the two results. The "Your Prompt's Output" section immediately feels like the clear winner, with the "Aha!" moment being the visual confirmation that the user's effort directly led to a superior outcome.
+
+Visualizing the Impact: UX/UI Solution
+This solution is designed to make the superiority of a structured prompt immediately obvious through clear and intentional visual design. The goal is to create an undeniable "aha!" moment for the user by presenting the two outputs in a compelling way.
+
+UI/UX Flow
+Layout and Labeling: The screen is divided into two distinct vertical panels. The panel on the left is labeled "Your Prompt's Output" and the panel on the right is labeled "Generic Prompt's Output." This clear labeling ensures the user knows exactly what they are looking at from the start.
+Visual Hierarchy and Prominence:
+The "Your Prompt's Output" panel is slightly wider and more visually dominant than the generic panel. It features a subtle but vibrant background color—for example, a light green or blue—and is crowned with a large, green checkmark icon. This immediately signals success and quality.
+The "Generic Prompt's Output" panel is narrower and uses a muted, neutral background color (like light gray). It may feature a small, yellow warning or "X" icon to indicate that the output is not ideal.
+Highlighting Key Differences: Within the output text itself, key features that resulted from the user's structured prompt are visually emphasized.
+If the user requested a bulleted list, the list items are bolded.
+If the user asked for a specific number or statistic, that number is displayed in a vibrant color.
+For Budi's use case, if the output is a JSON object, the keys and values are color-coded to be easily readable, while the generic output is a simple block of unformatted text.
+This design ensures that even a quick glance is enough for the user to understand the value of their structured prompt. The visual cues guide the user's eye, and the highlighted text provides immediate, tangible proof of their effort.
+Contextual Guidance: UX/UI Solution
+This solution is designed to make sure users include all the necessary background information, preventing generic or inaccurate AI outputs. The goal is to provide intelligent guidance that adapts to what the user is trying to accomplish.
+
+UI/UX Flow
+Dynamic Checklist: The core of this feature is a dynamic checklist that appears below the "Context" input field. This checklist is not static; it changes based on the user's input in the "Task" field.
+For example, if the user's task is "Summarize an article," the checklist will prompt:
+"Did you paste the full article text?"
+"Did you include the article's URL?"
+"Did you specify the main point or section to focus on?"
+If the user's task is "Generate Python code to solve an error," the checklist would change to:
+"Did you paste the full error message?"
+"Did you include the code snippet that's causing the error?"
+"Did you describe what you want the code to do?"
+Smart Input Fields: The "Context" field itself is designed to be intelligent.
+URL Fetching: If a user pastes a URL (e.g., a news article link) into the context field, the app will automatically recognize it. A small pop-up will appear asking, "Looks like you've pasted a link. Would you like us to automatically fetch the article's text?" This makes the process faster and more user-friendly.
+Drag-and-Drop: Users can drag a file (like a PDF or a text document) directly into the context field, which then extracts the text automatically. This is especially helpful for users who want to analyze large documents without manually copying and pasting.
+Visual Feedback: As the user addresses each point on the checklist, it is visually marked as complete (e.g., a checkmark appears next to the item). This creates a sense of progress and completion, encouraging the user to provide all the necessary information before moving on.
+Celebrating Mastery: UX/UI Solution
+This solution is designed to create a sense of accomplishment and empower the user to apply their new skills. The goal is to end the process with positive reinforcement and a clear path forward, encouraging them to see this as the beginning of a new skill set rather than a one-time task.
+
+UI/UX Flow
+The Celebratory Screen: After the user has reviewed the analysis in the Impact Analyzer, a new, full-screen message appears.
+Headline: The main headline is celebratory and personal, such as "You're a master prompter!" or "Your skills are growing!"
+Subtext: A brief, encouraging message reinforces their achievement. For example, "You just saw how a well-crafted prompt leads to superior results. This is a crucial skill for navigating the digital world."
+Visuals: The screen features a positive and uplifting visual element, such as a large checkmark, a digital "thumbs-up," or an animated graphic of a brain lighting up.
+Clear Next Steps (Call-to-Action): Directly below the celebratory message, a clear, three-part call-to-action section provides the user with tangible options for what to do next. Each option is presented as a distinct button or card.
+"Use This Prompt" (Primary Action): This is the most direct action. Clicking this button immediately copies the final, structured prompt to the user's clipboard, making it effortless for them to paste it into their desired AI model.
+"Test Your New Skills" (Secondary Action): This button connects the current feature to the broader platform. It links directly to the Gamified MIL Missions, prompting the user to apply what they've learned in a new challenge. For example, "Go to the Mission Hub to test your skills in 'Spot the Fake.'"
+"Share Your Success" (Tertiary Action): This button allows the user to share their positive experience on social media, spreading awareness of the tool. A pre-written message could be provided, such as "I just learned how to write better AI prompts with [App Name]! It's incredible how much of a difference it makes. #MIL #Hackathon"
+This final screen provides a sense of closure while also motivating the user to continue their learning journey. It transforms the experience from a simple task into a personal achievement.
