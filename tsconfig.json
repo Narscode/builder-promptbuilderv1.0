@@ -1,6 +1,6 @@
 {
   "name": "rest-express",
-  "version": "1",
+  "version": 1,
   "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
