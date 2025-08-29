@@ -1,0 +1,476 @@
+// Complete mission
+function completeMission() {
+    // Update user's total score
+    userTotalScore += missionScore;
+    localStorage.setItem('milScore', userTotalScore.toString());
+
+    // Show completion message
+    const completionHTML = `
+        <div style="text-align: center; padding: 40px;">
+            <div style="font-size: 4rem; margin-bottom: 16px;">🎉</div>
+            <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">Mission Complete!</h3>
+            <div style="font-size: 1.25rem; margin-bottom: 8px; color: var(--success);">+${missionScore} points earned</div>
+            <div style="color: var(--text-secondary); margin-bottom: 32px;">Total Score: ${userTotalScore} points</div>
+            <button class="btn btn-success" onclick="showMissionReviewPopup()" style="margin-bottom: 16px;">
+                Review Answers
+            </button>
+            <div style="display: flex; gap: 16px; justify-content: center;">
+                <button class="btn btn-success" onclick="returnToMissions()">
+                    <span>🏠</span>
+                    Back to Missions
+                </button>
+                <button class="btn btn-outline" onclick="navigateToPage('builder')">
+                    <span>⚡</span>
+                    Try Prompt Builder
+                </button>
+            </div>
+        </div>
+        <div id="missionReviewPopup" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
+            <div style="background:var(--bg-primary); border-radius:16px; max-width:600px; width:90%; margin:auto; padding:32px; box-shadow:0 8px 32px rgba(0,0,0,0.25); position:relative; border: 3px solid var(--accent);">
+                <button onclick="closeMissionReviewPopup()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✖</button>
+                <h2 style="margin-bottom:24px; color:var(--text-primary);">Mission Review</h2>
+                <div id="missionReviewContent"></div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('missionContent').innerHTML = completionHTML;
+    document.getElementById('missionNextBtn').style.display = 'none';
+    document.getElementById('missionCompleteBtn').style.display = 'none';
+
+    // Update user score display
+    updateUserScore();
+
+    const missionKey = Object.keys(missions).find(key => missions[key] === currentMission);
+    updateMissionProgress(missionKey, currentMission.questions.length);
+}
+
+// Show mission review popup
+function showMissionReviewPopup() {
+    const reviewPopup = document.getElementById('missionReviewPopup');
+    const reviewContent = document.getElementById('missionReviewContent');
+    let html = '';
+
+    currentMission.questions.forEach((q, idx) => {
+        const newsUrl = q.newsUrl || '';
+        let answerLabel = '';
+        let answerMedia = '';
+
+        Object.keys(q.content).forEach(opt => {
+            const option = q.content[opt];
+            if (option.isCorrect || option.isAI) {
+                answerLabel = option.text || '';
+                if (option.img) {
+                    answerMedia = `<img src="${option.img}" alt="Answer Image" style="height:80px; width:80px; object-fit:cover; border-radius:8px; margin-bottom:8px;">`;
+                } else if (option.audio) {
+                    answerMedia = `<audio controls src="${option.audio}" style="width:180px; margin-bottom:8px;"></audio>`;
+                }
+            }
+        });
+
+        html += `
+            <div class="review-question-container" style="background:var(--bg-tertiary); border-radius:12px; margin-bottom:16px; border:1.5px solid var(--border-primary); box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                <button class="review-toggle-btn" onclick="toggleReviewDetails(${idx})"
+                    style="width:100%; text-align:left; background:none; border:none; padding:20px; font-size:1rem; font-weight:600; color:var(--accent); cursor:pointer;">
+                    Q${idx + 1}: ${q.question}
+                    <span id="review-arrow-${idx}" style="float:right; font-size:1.2rem;">▼</span>
+                </button>
+                <div id="review-details-${idx}" class="review-details-animated" style="padding:0 20px 20px 20px;">
+                    ${answerMedia}
+                    <div style="margin-bottom:8px; color:var(--success); font-weight:500;">Answer: ${answerLabel}</div>
+                    <div style="color:var(--text-secondary); font-size:14px; margin-bottom:8px;">${q.explanation}</div>
+                    ${newsUrl ? `<div><a href="${newsUrl}" target="_blank" style="color:var(--accent); text-decoration:underline; font-size:13px;">Related News</a></div>` : ''}
+                </div>
+            </div>
+        `;
+    });
+
+    reviewContent.innerHTML = `
+        ${html}
+        <div style="text-align:center; margin-top:32px;">
+            <button class="btn btn-success" onclick="closeMissionReviewPopup(); returnToMissions();">
+                ← Back to Missions
+            </button>
+        </div>
+    `;
+    reviewPopup.style.display = 'flex';
+
+    // Collapse all dropdowns when opening the popup
+    currentMission.questions.forEach((_, idx) => {
+        const details = document.getElementById(`review-details-${idx}`);
+        const arrow = document.getElementById(`review-arrow-${idx}`);
+        if (details) details.classList.remove('open');
+        if (arrow) arrow.textContent = '▼';
+    });
+}
+
+function toggleReviewDetails(idx) {
+    // Collapse all other dropdowns
+    currentMission.questions.forEach((_, i) => {
+        if (i === idx) return;
+        const details = document.getElementById(`review-details-${i}`);
+        const arrow = document.getElementById(`review-arrow-${i}`);
+        if (details && arrow) {
+            details.classList.remove('open');
+            arrow.textContent = '▼';
+        }
+    });
+
+    // Toggle the selected dropdown
+    const details = document.getElementById(`review-details-${idx}`);
+    const arrow = document.getElementById(`review-arrow-${idx}`);
+    if (!details.classList.contains('open')) {
+        details.classList.add('open');
+        arrow.textContent = '▲';
+    } else {
+        details.classList.remove('open');
+        arrow.textContent = '▼';
+    }
+}
+
+// Close mission review popup
+function closeMissionReviewPopup() {
+    document.getElementById('missionReviewPopup').style.display = 'none';
+}
+
+// Return to mission selection
+function returnToMissions() {
+    document.getElementById('missionSelection').style.display = 'block';
+    document.getElementById('missionInterface').style.display = 'none';
+    currentMission = null;
+}
+
+// Update user score display
+function updateUserScore() {
+    const scoreElement = document.getElementById('userScore');
+    if (scoreElement) {
+        scoreElement.textContent = userTotalScore;
+    }
+    highlightStatusCard(userTotalScore);
+}
+
+function highlightStatusCard(score) {
+    // Remove active from all
+    document.querySelectorAll('.status-card').forEach(card => card.classList.remove('active'));
+    // Determine status
+    if (score >= 250) {
+        document.getElementById('status-mil-expert').classList.add('active');
+    } else if (score >= 150) {
+        document.getElementById('status-critical-thinker').classList.add('active');
+    } else if (score >= 75) {
+        document.getElementById('status-ai-aware').classList.add('active');
+    } else {
+        document.getElementById('status-beginner').classList.add('active');
+    }
+}
+
+// Educational Content Hub functionality
+let currentFilter = 'all';
+
+// Filter content by category
+function filterContent(category) {
+    currentFilter = category;
+    
+    // Update active button
+    document.querySelectorAll('.content-category-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-category') === category) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Show/hide articles
+    document.querySelectorAll('.content-card').forEach(card => {
+        if (category === 'all' || card.classList.contains(category)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Article content database
+const articles = {
+    'bias': {
+        title: 'Understanding Data Bias in AI Systems',
+        category: 'AI Ethics',
+        readTime: '5 min read',
+        content: `
+            <h1>Understanding Data Bias in AI Systems</h1>
+            
+            <p><strong>What is Data Bias?</strong></p>
+            <p>Data bias occurs when AI training data doesn't accurately represent the real world or contains systematic prejudices. This leads to AI systems that make unfair or discriminatory decisions.</p>
+            
+            <p><strong>Types of Bias in AI:</strong></p>
+            <ul>
+                <li><strong>Historical Bias:</strong> Past discriminatory practices reflected in data</li>
+                <li><strong>Representation Bias:</strong> Certain groups underrepresented in training data</li>
+                <li><strong>Measurement Bias:</strong> Differences in how data is collected for different groups</li>
+                <li><strong>Evaluation Bias:</strong> Using inappropriate benchmarks for different populations</li>
+            </ul>
+            
+            <p><strong>Real-World Examples:</strong></p>
+            <p>• Facial recognition systems performing poorly on darker skin tones<br>
+            • Resume screening AI favoring male candidates<br>
+            • Language models associating certain professions with specific genders</p>
+            
+            <p><strong>How to Identify Bias:</strong></p>
+            <p>• Question if AI decisions seem unfair to certain groups<br>
+            • Look for patterns in AI errors<br>
+            • Ask about the diversity of training data<br>
+            • Test AI systems with diverse inputs</p>
+            
+            <p><strong>What You Can Do:</strong></p>
+            <p>• Report biased AI behavior when you encounter it<br>
+            • Advocate for diverse teams in AI development<br>
+            • Support organizations working on AI fairness<br>
+            • Stay informed about AI ethics and bias research</p>
+        `
+    },
+    'ip': {
+        title: 'Intellectual Property in the Age of AI',
+        category: 'AI Ethics',
+        readTime: '7 min read',
+        content: `
+            <h1>Intellectual Property in the Age of AI</h1>
+            
+            <p><strong>The New Frontier of Creativity</strong></p>
+            <p>As AI becomes capable of creating art, writing, music, and code, we face unprecedented questions about ownership, attribution, and copyright in the digital age.</p>
+            
+            <p><strong>Key Questions:</strong></p>
+            <ul>
+                <li>Who owns AI-generated content?</li>
+                <li>Should AI training data include copyrighted material?</li>
+                <li>How do we protect human creators' rights?</li>
+                <li>What constitutes fair use in AI training?</li>
+            </ul>
+            
+            <p><strong>Current Legal Landscape:</strong></p>
+            <p>• Most countries require human authorship for copyright<br>
+            • Training AI on copyrighted data raises legal concerns<br>
+            • Attribution becomes complex with AI assistance<br>
+            • New licensing models are emerging</p>
+            
+            <p><strong>Best Practices for Students:</strong></p>
+            <p>• Always disclose when AI helps with your work<br>
+            • Understand your school's AI usage policies<br>
+            • Respect original creators when using AI tools<br>
+            • Learn about Creative Commons and open licenses</p>
+            
+            <p><strong>Protecting Your Own Work:</strong></p>
+            <p>• Use watermarks or metadata in digital creations<br>
+            • Keep records of your creative process<br>
+            • Understand platform terms of service<br>
+            • Consider registering important works</p>
+        `
+    },
+    'inclusion': {
+        title: 'AI\'s Impact on Marginalized Communities',
+        category: 'AI & Society',
+        readTime: '8 min read',
+        content: `
+            <h1>AI's Impact on Marginalized Communities</h1>
+            
+            <p><strong>The Double-Edged Nature of AI</strong></p>
+            <p>AI technology can either perpetuate existing inequalities or become a powerful tool for social justice and inclusion, depending on how it's designed and deployed.</p>
+            
+            <p><strong>Potential Harms:</strong></p>
+            <ul>
+                <li>Biased hiring algorithms discriminating against minorities</li>
+                <li>Facial recognition systems with poor accuracy for certain ethnic groups</li>
+                <li>Language AI that doesn't understand cultural contexts</li>
+                <li>Healthcare AI trained primarily on data from privileged populations</li>
+            </ul>
+            
+            <p><strong>Opportunities for Good:</strong></p>
+            <ul>
+                <li>Translation tools preserving endangered languages</li>
+                <li>Accessibility AI helping people with disabilities</li>
+                <li>Educational AI providing personalized learning</li>
+                <li>Healthcare AI improving diagnosis in underserved areas</li>
+            </ul>
+            
+            <p><strong>Principles of Inclusive AI:</strong></p>
+            <p>• Diverse development teams<br>
+            • Community involvement in design<br>
+            • Cultural sensitivity testing<br>
+            • Transparent decision-making processes<br>
+            • Regular bias auditing</p>
+            
+            <p><strong>How Youth Can Make a Difference:</strong></p>
+            <p>• Advocate for inclusive AI in your community<br>
+            • Learn about different cultural perspectives<br>
+            • Question AI systems that seem unfair<br>
+            • Support diverse voices in technology</p>
+        `
+    },
+    'divide': {
+        title: 'The Digital Divide and AI Access',
+        category: 'AI & Society',
+        readTime: '6 min read',
+        content: `
+            <h1>The Digital Divide and AI Access</h1>
+            
+            <p><strong>Unequal Access to AI Benefits</strong></p>
+            <p>While AI promises to transform education, healthcare, and economic opportunities, unequal access to technology means these benefits may not reach everyone equally.</p>
+            
+            <p><strong>Barriers to AI Access:</strong></p>
+            <ul>
+                <li>Limited internet connectivity in rural areas</li>
+                <li>High costs of AI-powered devices and services</li>
+                <li>Lack of digital literacy and AI understanding</li>
+                <li>Language barriers in AI interfaces</li>
+                <li>Cultural and social barriers to technology adoption</li>
+            </ul>
+            
+            <p><strong>Economic Implications:</strong></p>
+            <p>• AI literacy becoming essential for future jobs<br>
+            • Widening gap between AI-savvy and traditional workers<br>
+            • Risk of further marginalizing underserved communities<br>
+            • Need for reskilling and education programs</p>
+            
+            <p><strong>Solutions and Initiatives:</strong></p>
+            <p>• Community tech centers and libraries<br>
+            • Mobile AI education programs<br>
+            • Partnerships between tech companies and schools<br>
+            • Open-source AI tools and resources<br>
+            • Government digital inclusion policies</p>
+            
+            <p><strong>What You Can Do:</strong></p>
+            <p>• Volunteer to teach tech skills in your community<br>
+            • Advocate for better internet infrastructure<br>
+            • Share AI knowledge with friends and family<br>
+            • Support organizations working on digital equity</p>
+        `
+    },
+    'education': {
+        title: 'AI in Education: Transforming Learning',
+        category: 'Future of AI',
+        readTime: '9 min read',
+        content: `
+            <h1>AI in Education: Transforming Learning</h1>
+            
+            <p><strong>The Learning Revolution</strong></p>
+            <p>AI is reshaping education by personalizing learning experiences, automating administrative tasks, and creating new ways for students and teachers to interact with knowledge.</p>
+            
+            <p><strong>Current Applications:</strong></p>
+            <ul>
+                <li>Adaptive learning platforms that adjust to student pace</li>
+                <li>AI tutoring systems for personalized help</li>
+                <li>Automated grading and feedback systems</li>
+                <li>Language learning with AI conversation partners</li>
+                <li>Accessibility tools for students with disabilities</li>
+            </ul>
+            
+            <p><strong>Benefits for Students:</strong></p>
+            <p>• Personalized learning paths<br>
+            • Immediate feedback and support<br>
+            • Access to AI tutors 24/7<br>
+            • Enhanced creativity tools<br>
+            • Better preparation for AI-integrated workplaces</p>
+            
+            <p><strong>Benefits for Teachers:</strong></p>
+            <p>• Automated administrative tasks<br>
+            • Data-driven insights about student progress<br>
+            • Enhanced teaching materials and resources<br>
+            • More time for human connection and mentoring</p>
+            
+            <p><strong>Challenges and Concerns:</strong></p>
+            <p>• Risk of over-dependence on AI<br>
+            • Privacy and data security issues<br>
+            • Need for teacher training and support<br>
+            • Ensuring equitable access across schools<br>
+            • Maintaining human elements in education</p>
+            
+            <p><strong>The Future of Learning:</strong></p>
+            <p>Education will likely become more flexible, personalized, and AI-augmented while preserving the essential human elements of teaching, creativity, and critical thinking.</p>
+        `
+    },
+    'trends': {
+        title: 'Emerging Trends in AI Technology',
+        category: 'Future of AI',
+        readTime: '10 min read',
+        content: `
+            <h1>Emerging Trends in AI Technology</h1>
+            
+            <p><strong>The Next Wave of Innovation</strong></p>
+            <p>AI technology continues to evolve rapidly, with new breakthroughs reshaping what's possible and creating new opportunities and challenges for society.</p>
+            
+            <p><strong>Current Breakthrough Areas:</strong></p>
+            <ul>
+                <li><strong>Multimodal AI:</strong> Systems that understand text, images, audio, and video together</li>
+                <li><strong>AI Agents:</strong> Autonomous systems that can plan and execute complex tasks</li>
+                <li><strong>Edge AI:</strong> AI processing directly on devices without internet</li>
+                <li><strong>Quantum AI:</strong> Combining quantum computing with machine learning</li>
+                <li><strong>Neuromorphic Computing:</strong> Brain-inspired AI hardware</li>
+            </ul>
+            
+            <p><strong>Emerging Applications:</strong></p>
+            <p>• AI-powered scientific discovery<br>
+            • Autonomous vehicles and robots<br>
+            • Personalized medicine and drug discovery<br>
+            • Climate modeling and environmental protection<br>
+            • Real-time language translation</p>
+            
+            <p><strong>Societal Implications:</strong></p>
+            <p>• Changing nature of work and employment<br>
+            • New forms of creativity and entertainment<br>
+            • Enhanced scientific research capabilities<br>
+            • Improved accessibility and inclusion<br>
+            • Need for new governance and ethics frameworks</p>
+            
+            <p><strong>Preparing for the Future:</strong></p>
+            <p>• Stay curious and keep learning<br>
+            • Develop both technical and human skills<br>
+            • Understand AI ethics and responsible use<br>
+            • Participate in conversations about AI's future<br>
+            • Build adaptability and critical thinking skills</p>
+            
+            <p><strong>Youth as AI Leaders:</strong></p>
+            <p>Young people have a unique opportunity to shape AI's future by bringing fresh perspectives, advocating for responsible development, and ensuring AI serves all of humanity.</p>
+        `
+    }
+};
+
+const missionConfig = {
+    'spot-fake': { total: 5, barId: 'progress-spot-fake', color: 'var(--success)' },
+    'ethics': { total: 4, barId: 'progress-ethics', color: 'var(--success)' },
+    'myths': { total: 6, barId: 'progress-myths', color: 'var(--success)' }
+};
+
+function updateMissionProgress(missionKey, completedCount) {
+    const config = missionConfig[missionKey];
+    if (!config) return;
+    const percent = Math.round((completedCount / config.total) * 100);
+    const bar = document.getElementById(config.barId);
+    const card = document.querySelector(`.mission-card[data-mission="${missionKey}"]`);
+    const progressText = card ? card.querySelector('.progress-text') : null;
+
+    if (bar) {
+        bar.style.width = percent + '%';
+        bar.style.background = config.color; // Always green for progress
+    }
+    if (progressText) {
+        progressText.textContent = `${completedCount}/${config.total} completed`;
+    }
+}
+
+// Call this after each question is answered
+function afterQuestionAnswered() {
+    // Only update if user answered a question
+    const missionKey = Object.keys(missions).find(key => missions[key] === currentMission);
+    updateMissionProgress(missionKey, currentQuestionIndex + 1);
+}
+
+// Example usage: call this after each question is completed
+// updateMissionProgress('spot-fake', 3); // 3 out of 5 completed
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize missions if on missions page
+    if (window.location.hash.includes('missions')) {
+        initializeMissions();
+    }
+    // Always highlight status card on load
+    highlightStatusCard(userTotalScore);
+});

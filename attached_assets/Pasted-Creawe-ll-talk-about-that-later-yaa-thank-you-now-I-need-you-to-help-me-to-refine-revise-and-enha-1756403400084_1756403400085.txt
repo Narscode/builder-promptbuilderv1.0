@@ -1,0 +1,1354 @@
+Creawe'll talk about that later yaa thank you, now I need you to help me to refine, revise, and enhance this mission page
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Builder - MIL Missions</title>
+    <link rel="stylesheet" href="styles/shared.css">
+    <script src="js/shared.js"></script>
+    <script src="js/missions.js"></script>
+    <style>
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-primary);
+            z-index: 1000;
+            padding: 16px 0;
+        }
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        .navbar-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--text-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--bg-primary);
+            font-size: 16px;
+        }
+        .navbar-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        .navbar-badge {
+            font-size: 10px;
+            color: var(--text-tertiary);
+            padding: 2px 6px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .nav-link.active {
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        body {
+            padding-top: 80px;
+        }
+        @media (max-width: 768px) {
+            .navbar-container { padding: 0 16px; }
+            .mobile-menu-toggle { display: block; }
+            .navbar-nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 10, 0.98);
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--border-primary);
+                flex-direction: column;
+                padding: 16px;
+                gap: 4px;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            .navbar-nav.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            .nav-link {
+                width: 100%;
+                justify-content: flex-start;
+                padding: 12px 16px;
+            }
+            .navbar-title { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <div class="navbar-logo">P</div>
+                <span class="navbar-title">Prompt Builder</span>
+                <span class="navbar-badge">UNESCO MIL</span>
+            </a>
+            <div class="navbar-nav" id="navbarNav">
+                <a href="index.html" class="nav-link"><span>🏠</span> Home</a>
+                <a href="builder.html" class="nav-link"><span>🛠️</span> Builder</a>
+                <a href="analyzer.html" class="nav-link"><span>📊</span> Analyzer</a>
+                <a href="missions.html" class="nav-link active"><span>🎯</span> Missions</a>
+                <a href="learning.html" class="nav-link"><span>📚</span> Learning</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">P</div>
+                <span style="font-weight: 600;">Prompt Builder</span>
+                <div style="font-size: 10px; color: var(--text-tertiary); margin-left: 8px; padding: 2px 6px; background: rgba(255,255,255,0.1); border-radius: 4px;">UNESCO MIL</div>
+            </div>
+        </div>
+        <div class="header">
+            <h1>Gamified MIL Missions</h1>
+            <p>Build critical thinking skills through interactive challenges and earn points on the leaderboard</p>
+        </div>
+        <div class="card">
+            <div class="container">
+                <h1>Gamified MIL Missions</h1>
+                <p>Build critical thinking skills through interactive challenges and earn points on the leaderboard.</p>
+    
+                <div class="mission-hub"></div>
+                
+                <div id="missionSelection" class="mission-selection">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 32px; margin-bottom: 48px;">
+                        
+                        <div class="mission-card" data-mission="spot-fake" data-total-questions="5" onclick="startMission('spot-fake')" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05)); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 20px; padding: 32px; cursor: pointer; transition: all 0.3s ease;">
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                                <div style="width: 60px; height: 60px; background: rgba(239, 68, 68, 0.2); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px;">🔍</div>
+                                <div>
+                                    <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Spot the Fake</h3>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="background: var(--error); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">MEDIUM</span>
+                                        <span style="color: var(--text-secondary); font-size: 14px;">10 points each</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+                                Identify AI-generated content from real content. Test your ability to detect deepfakes, 
+                                synthetic text, and manipulated media.
+                            </p>
+                            <div style="display: flex; align-items: center; justify-content: between; gap: 16px;">
+                                <div style="flex: 1;">
+                                    <div style="background: var(--bg-tertiary); height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="progress-spot-fake" class="progress-bar" style="height: 100%; background: var(--error); width: 0%; border-radius: 3px; transition: width 0.3s ease;"></div>
+                                    </div>
+                                    <div class="progress-text" style="color: var(--text-tertiary); font-size: 12px; margin-top: 4px;">0/5 completed</div>
+                                </div>
+                                <button class="btn" style="background: var(--error); padding: 8px 16px; font-size: 12px;">Start Mission</button>
+                            </div>
+                        </div>
+                        
+                        <div class="mission-card" data-mission="ethics" data-total-questions="4" onclick="startMission('ethics')" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05)); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 20px; padding: 32px; cursor: pointer; transition: all 0.3s ease;">
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                                <div style="width: 60px; height: 60px; background: rgba(245, 158, 11, 0.2); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px;">⚖️</div>
+                                <div>
+                                    <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Ethics Challenge</h3>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="background: var(--warning); color: var(--bg-primary); padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">HARD</span>
+                                        <span style="color: var(--text-secondary); font-size: 14px;">15 points each</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+                                Navigate complex ethical scenarios involving AI usage. Learn responsible AI practices 
+                                and understand the impact on different communities.
+                            </p>
+                            <div style="display: flex; align-items: center; justify-content: between; gap: 16px;">
+                                <div style="flex: 1;">
+                                    <div style="background: var(--bg-tertiary); height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="progress-ethics" class="progress-bar" style="height: 100%; background: var(--warning); width: 0%; border-radius: 3px; transition: width 0.3s ease;"></div>
+                                    </div>
+                                    <div class="progress-text" style="color: var(--text-tertiary); font-size: 12px; margin-top: 4px;">0/4 completed</div>
+                                </div>
+                                <button class="btn" style="background: var(--warning); color: var(--bg-primary); padding: 8px 16px; font-size: 12px;">Start Mission</button>
+                            </div>
+                        </div>
+                        
+                        <div class="mission-card" data-mission="myths" data-total-questions="6" onclick="startMission('myths')" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 32px; cursor: pointer; transition: all 0.3s ease;">
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                                <div style="width: 60px; height: 60px; background: rgba(16, 185, 129, 0.2); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px;">💡</div>
+                                <div>
+                                    <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Myth Busters</h3>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="background: var(--success); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">EASY</span>
+                                        <span style="color: var(--text-secondary); font-size: 14px;">5 points each</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+                                Identify and correct common misconceptions about AI. Learn the facts behind 
+                                artificial intelligence and separate reality from science fiction.
+                            </p>
+                            <div style="display: flex; align-items: center; justify-content: between; gap: 16px;">
+                                <div style="flex: 1;">
+                                    <div style="background: var(--bg-tertiary); height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="progress-myths" class="progress-bar" style="height: 100%; background: var(--success); width: 0%; border-radius: 3px; transition: width 0.3s ease;"></div>
+                                    </div>
+                                    <div class="progress-text" style="color: var(--text-tertiary); font-size: 12px; margin-top: 4px;">0/6 completed</div>
+                                </div>
+                                <button class="btn btn-success" style="padding: 8px 16px; font-size: 12px;">Start Mission</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 20px; padding: 32px; margin-top: 48px;">
+    <div style="display: flex; align-items: center; justify-content: between; margin-bottom: 24px;">
+        <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-right: 24px;">🏆 Leaderboard</h3>
+        <div style="background: var(--accent); color: var(--bg-primary); padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 600;">
+            Your Score: <span id="userScore">0</span> points
+        </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
+        <div id="status-mil-expert" class="status-card" style="text-align: center; padding: 20px; border-radius: 12px;">
+            <div style="width: 60px; height: 60px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 24px;">🥇</div>
+            <div style="font-weight: 600; color: var(--text-primary);">MIL Expert</div>
+            <div style="color: var(--text-secondary); font-size: 14px;">250+ points</div>
+        </div>
+        <div id="status-critical-thinker" class="status-card" style="text-align: center; padding: 20px; border-radius: 12px;">
+            <div style="width: 60px; height: 60px; background: #C0C0C0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 24px;">🥈</div>
+            <div style="font-weight: 600; color: var(--text-primary);">Critical Thinker</div>
+            <div style="color: var(--text-secondary); font-size: 14px;">150+ points</div>
+        </div>
+        <div id="status-ai-aware" class="status-card" style="text-align: center; padding: 20px; border-radius: 12px;">
+            <div style="width: 60px; height: 60px; background: #CD7F32; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 24px;">🥉</div>
+            <div style="font-weight: 600; color: var(--text-primary);">AI Aware</div>
+            <div style="color: var(--text-secondary); font-size: 14px;">75+ points</div>
+        </div>
+        <div id="status-beginner" class="status-card" style="text-align: center; padding: 20px; border-radius: 12px;">
+            <div style="width: 60px; height: 60px; background: var(--bg-tertiary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 24px;">🌱</div>
+            <div style="font-weight: 600; color: var(--text-primary);">Beginner</div>
+            <div style="color: var(--text-secondary); font-size: 14px;">0+ points</div>
+        </div>
+    </div>
+</div>
+                </div>
+                
+                <div id="missionInterface" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 32px;">
+                        <button class="btn btn-outline" onclick="returnToMissions()" style="float: left;">
+                            <span>←</span>
+                            Back to Missions
+                        </button>
+                        <div style="display: inline-block;">
+                            <h3 id="missionTitle" style="font-size: 1.5rem; margin-bottom: 8px;"></h3>
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 16px;">
+                                <span id="missionProgress">Question 1 of 5</span>
+                                <span>•</span>
+                                <span id="missionScore">Score: 0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="missionContent" style="background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 20px; padding: 40px; margin-bottom: 32px;">
+                        
+                    </div>
+                    <div style="text-align: center;">
+                        <button id="missionNextBtn" class="btn btn-success" onclick="nextMissionQuestion()" style="display: none;">
+                            Next Question
+                        </button>
+                        <button id="missionCompleteBtn" class="btn btn-success" onclick="completeMission()" style="display: none;">
+                            Complete Mission
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            document.getElementById('navbarNav').classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('navbarNav').classList.remove('active');
+            });
+        });
+        document.addEventListener('click', function(event) {
+            const nav = document.getElementById('navbarNav');
+            const toggle = document.getElementById('mobileMenuToggle');
+            if (!nav.contains(event.target) && !toggle.contains(event.target)) {
+                nav.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
+
+mission.js
+// MIL Missions functionality
+let currentMission = null;
+let currentQuestionIndex = 0;
+let missionScore = 0;
+let userTotalScore = parseInt(localStorage.getItem('milScore') || '0');
+
+// Mission data
+const missions = {
+    'spot-fake': {
+        initializeDragAndDrop: function() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropzones = document.querySelectorAll('.dropzone');
+            const nextButton = document.getElementById('nextQuestionBtn');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggable.classList.add('dragging');
+                });
+
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove('dragging');
+                });
+            });
+
+            dropzones.forEach(dropzone => {
+                dropzone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const dragging = document.querySelector('.dragging');
+                    dropzone.appendChild(dragging);
+                });
+
+                dropzone.addEventListener('drop', () => {
+                    const dragging = document.querySelector('.dragging');
+                    dropzone.appendChild(dragging);
+
+                    // Show the Next Button after a drop
+                    nextButton.style.display = 'inline-block';
+                });
+            });
+        },
+        title: 'Spot the Fake',
+        icon: '🔍',
+        difficulty: 'MEDIUM',
+        pointsPerQuestion: 10,
+        questions: [
+            {
+                type: 'drag-and-drop',
+                question: 'Drag the statements to the correct categories: Real or Fake.',
+                content: {
+                    statements: [
+                        'AI can write poetry indistinguishable from humans.',
+                        'AI can think and feel emotions like humans.',
+                        'AI is used to detect diseases earlier than doctors.',
+                        'AI can predict the future with 100% accuracy.',
+                    ],
+                },
+                explanation: 'Drag the statements to the correct categories to test your understanding of AI capabilities.',
+            },
+            {
+                type: 'image',
+                question: 'Which of these images is AI-generated?',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { img: 'assets/real 1.jpg', isAI: false },
+                    optionB: { img: 'assets/ai 1.jpg', isAI: true },
+                    optionC: { img: 'assets/real 2.jpg', isAI: false },
+                },
+                explanation: 'AI-generated portraits often have subtle asymmetries and unnatural details in eyes, teeth, or hair patterns.',
+            },
+            {
+                type: 'text',
+                question: 'Which news headline was likely generated by AI?',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'Local Mayor Announces New Park Development Plan', isAI: false },
+                    optionB: { text: 'Breaking: Revolutionary Scientists Discover Unprecedented Breakthrough in Quantum Computing Applications', isAI: true },
+                    optionC: { text: 'Weather Alert: Heavy Rain Expected This Weekend', isAI: false }
+                },
+                explanation: 'AI-generated headlines often use excessive superlatives and buzzwords like "revolutionary," "unprecedented," and "breakthrough" together.'
+            },
+            {
+                type: 'audio',
+                question: 'Which audio clip shows signs of being AI-generated speech?',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { audio: 'assets/audio1.mp3', isAI: false, text: '[Natural speech with slight background noise and breathing]' },
+                    optionB: { audio: 'audio/ai 1.mp3', isAI: true, text: '[Crystal clear speech with uniform tone and no natural pauses]' },
+                    optionC: { audio: 'assets/audio3.mp3', isAI: false, text: '[Speech with natural variations in pace and emphasis]' }
+                },
+                explanation: 'AI-generated speech often lacks natural breathing patterns, background noise, and has unnaturally consistent tone.'
+            },
+            {
+                type: 'social',
+                question: 'Which social media post pattern suggests AI generation?',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'Personal story with specific details and emotions', isAI: false },
+                    optionB: { text: 'Generic motivational content with perfect grammar and trending hashtags', isAI: true },
+                    optionC: { text: 'Casual update with typos and local references', isAI: false }
+                },
+                explanation: 'AI-generated social media content often lacks personal specificity and uses overly perfect grammar with trending elements.'
+            },
+            {
+                type: 'video',
+                question: 'What\'s a key indicator of a deepfake video?',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'Natural eye blinking and lip-sync alignment', isAI: false },
+                    optionB: { text: 'Inconsistent lighting on the face vs. background', isAI: true },
+                    optionC: { text: 'Clear audio that matches the video quality', isAI: false }
+                },
+                explanation: 'Deepfakes often struggle with consistent lighting, shadows, and reflections that match the original video context.'
+            }
+        ]
+    },
+    'ethics': {
+        title: 'Ethics Challenge',
+        icon: '⚖️',
+        difficulty: 'HARD',
+        pointsPerQuestion: 15,
+        questions: [
+            {
+                question: 'You\'re using AI to write a school essay. What\'s the most ethical approach?',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'Copy AI output directly and submit as your work', isCorrect: false },
+                    optionB: { text: 'Use AI for research and brainstorming, then write in your own words with proper attribution', isCorrect: true },
+                    optionC: { text: 'Edit AI output slightly to make it look like your writing', isCorrect: false }
+                },
+                explanation: 'Ethical AI use in education involves transparency, learning, and maintaining academic integrity while leveraging AI as a research tool.'
+            },
+            {
+                question: 'Your AI chatbot gives biased information about a cultural group. What should you do?',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'Share the information since it came from AI', isCorrect: false },
+                    optionB: { text: 'Fact-check with diverse sources and report the bias', isCorrect: true },
+                    optionC: { text: 'Ignore it and ask a different question', isCorrect: false }
+                },
+                explanation: 'Responsible AI use requires critical evaluation of outputs and reporting bias to help improve AI systems for everyone.'
+            },
+            {
+                question: 'You discover an AI tool that could spread misinformation. What\'s your responsibility?',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'Report it to appropriate authorities and warn others', isCorrect: true },
+                    optionB: { text: 'Use it for fun since you\'re not the creator', isCorrect: false },
+                    optionC: { text: 'Keep quiet to avoid causing panic', isCorrect: false }
+                },
+                explanation: 'Youth have a responsibility to help prevent the spread of misinformation and protect their communities from harmful AI applications.'
+            },
+            {
+                question: 'When is it ethical to use AI to create content for marginalized communities?',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'When you involve community members in the process and respect their perspectives', isCorrect: true },
+                    optionB: { text: 'When you think you understand their experiences well enough', isCorrect: false },
+                    optionC: { text: 'When the AI output seems accurate to you', isCorrect: false }
+                },
+                explanation: 'Ethical AI content creation requires genuine community involvement, respect for lived experiences, and inclusive design processes.'
+            }
+        ]
+    },
+    'myths': {
+        title: 'Myth Busters',
+        icon: '💡',
+        difficulty: 'EASY',
+        pointsPerQuestion: 5,
+        questions: [
+            {
+                question: 'True or False: AI can perfectly understand human emotions and context.',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'True - AI is very advanced now', isCorrect: false },
+                    optionB: { text: 'False - AI recognizes patterns but doesn\'t truly understand emotions', isCorrect: true }
+                },
+                explanation: 'AI can identify emotional patterns in text and speech, but it doesn\'t have genuine understanding or empathy like humans do.'
+            },
+            {
+                question: 'True or False: If an AI says something, it must be factual.',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'True - AI systems are programmed to be accurate', isCorrect: false },
+                    optionB: { text: 'False - AI can generate plausible-sounding but incorrect information', isCorrect: true }
+                },
+                explanation: 'AI systems can produce confident-sounding responses that are completely false. Always verify important information from reliable sources.'
+            },
+            {
+                question: 'True or False: AI will replace all human jobs.',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'True - AI is more efficient than humans', isCorrect: false },
+                    optionB: { text: 'False - AI will change jobs but humans remain essential', isCorrect: true }
+                },
+                explanation: 'While AI will automate some tasks, it will also create new jobs and enhance human capabilities rather than replace humans entirely.'
+            },
+            {
+                question: 'True or False: AI systems are completely neutral and unbiased.',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'True - Computers can\'t have opinions', isCorrect: false },
+                    optionB: { text: 'False - AI systems can perpetuate human biases from training data', isCorrect: true }
+                },
+                explanation: 'AI systems learn from human-created data, which often contains historical biases and prejudices that get amplified by the AI.'
+            },
+            {
+                question: 'True or False: You can always tell when content is AI-generated.',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'True - AI content has obvious tells', isCorrect: false },
+                    optionB: { text: 'False - AI-generated content is becoming increasingly sophisticated', isCorrect: true }
+                },
+                explanation: 'Modern AI can create very convincing text, images, and audio that can be difficult to distinguish from human-created content.'
+            },
+            {
+                question: 'True or False: AI systems learn and improve on their own.',
+                newsUrl: 'https://www.digitalbrew.com/the-hidden-downsides-of-ai-generated-videos/',
+                content: {
+                    optionA: { text: 'True - That\'s how machine learning works', isCorrect: false },
+                    optionB: { text: 'False - AI systems need human guidance and oversight', isCorrect: true }
+                },
+                explanation: 'While AI can process data and identify patterns, human oversight is crucial for ensuring ethical development and preventing harmful outcomes.'
+            }
+        ]
+    }
+};
+
+// Initialize missions page
+function initializeMissions() {
+    updateUserScore();
+}
+
+// Start a specific mission
+function startMission(missionType) {
+    currentMission = missions[missionType];
+    currentQuestionIndex = 0;
+    missionScore = 0;
+    
+    // Hide mission selection and show mission interface
+    document.getElementById('missionSelection').style.display = 'none';
+    document.getElementById('missionInterface').style.display = 'block';
+    
+    // Update mission title
+    document.getElementById('missionTitle').innerHTML = `${currentMission.icon} ${currentMission.title}`;
+    
+    // Load first question
+    loadCurrentQuestion();
+}
+
+// Load current question
+function loadCurrentQuestion() {
+    const question = currentMission.questions[currentQuestionIndex];
+    const totalQuestions = currentMission.questions.length;
+
+    // Update progress
+    document.getElementById('missionProgress').textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}`;
+    document.getElementById('missionScore').textContent = `Score: ${missionScore}`;
+
+    // Check the question type
+    if (question.type === 'drag-and-drop') {
+        // Render drag-and-drop question
+        const dragAndDropHTML = `
+            <h3 style="color: var(--text-primary); margin-bottom: 16px;">${question.question}</h3>
+            <div style="display: flex; gap: 32px; margin-top: 20px;">
+                
+                <div style="flex: 1;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Drag These Statements:</h4>
+                    <div id="draggable-items" style="display: flex; flex-direction: column; gap: 12px;">
+                        ${question.content.statements
+                            .map(
+                                (statement) => `
+                                <div class="draggable" draggable="true" style="padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 8px; cursor: grab;">
+                                    ${statement}
+                                </div>
+                            `
+                            )
+                            .join('')}
+                    </div>
+                </div>
+
+                
+                <div style="flex: 1;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Drop Here:</h4>
+                    <div id="real-dropzone" class="dropzone" style="padding: 16px; background: rgba(16, 185, 129, 0.1); border: 2px dashed var(--success); border-radius: 8px; min-height: 150px;">
+                        <h5 style="color: var(--success); text-align: center;">Real</h5>
+                    </div>
+                    <div id="fake-dropzone" class="dropzone" style="padding: 16px; background: rgba(239, 68, 68, 0.1); border: 2px dashed var(--danger); border-radius: 8px; min-height: 150px; margin-top: 16px;">
+                        <h5 style="color: var(--danger); text-align: center;">Fake</h5>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <button id="nextQuestionBtn" class="btn btn-success" style="display: none; padding: 12px 24px; font-size: 1.2rem; font-weight: 600; border-radius: 8px; cursor: pointer;">
+                    Next Question
+                </button>
+            </div>
+        `;
+
+        // Log rendering information
+        console.log('Rendering drag-and-drop question...');
+        console.log(dragAndDropHTML);
+        
+        // Insert drag-and-drop HTML into the mission content
+        document.getElementById('missionContent').innerHTML = dragAndDropHTML;
+
+        // Initialize drag-and-drop functionality
+        initializeDragAndDrop();
+
+        // Add event listener for the Next Button
+        document.getElementById('nextQuestionBtn').addEventListener('click', () => {
+            nextMissionQuestion();
+        });
+    } else {
+        // Handle other question types if necessary
+    } if (question.type === 'image') {
+        // Render image question
+        const imageQuestionHTML = `
+            <h3 style="color: var(--text-primary); margin-bottom: 16px;">${question.question}</h3>
+            <div style="display: flex; gap: 16px; justify-content: center;">
+                ${Object.keys(question.content)
+                    .map(
+                        (key) => `
+                        <div class="image-option" onclick="selectAnswer('${key}')" style="cursor: pointer;">
+                            <img src="${question.content[key].img}" alt="Option ${key}" style="width: 200px; height: 200px; object-fit: cover; border-radius: 8px; border: 2px solid var(--border-primary);">
+                        </div>
+                    `
+                    )
+                    .join('')}
+            </div>
+        `;
+
+        document.getElementById('missionContent').innerHTML = imageQuestionHTML;
+    }
+// Handle answer selection
+function initializeDragAndDrop() {
+    const draggables = document.querySelectorAll('.draggable');
+    const dropzones = document.querySelectorAll('.dropzone');
+    const nextButton = document.getElementById('nextQuestionBtn');
+
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', () => {
+            draggable.classList.add('dragging');
+        });
+
+        draggable.addEventListener('dragend', () => {
+            draggable.classList.remove('dragging');
+        });
+    });
+
+    dropzones.forEach(dropzone => {
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const dragging = document.querySelector('.dragging');
+            dropzone.appendChild(dragging);
+        });
+
+        dropzone.addEventListener('drop', () => {
+            const dragging = document.querySelector('.dragging');
+            dropzone.appendChild(dragging);
+
+            // Show the Next Button after a drop
+            nextButton.style.display = 'inline-block';
+        });
+    });
+}
+
+// Handle answer selection
+function selectAnswer(selectedOption) {
+    const question = currentMission.questions[currentQuestionIndex];
+    const selectedAnswer = question.content[selectedOption];
+    
+    // Determine if answer is correct
+    let isCorrect = false;
+    if (selectedAnswer.isCorrect !== undefined) {
+        isCorrect = selectedAnswer.isCorrect;
+    } else if (selectedAnswer.isAI !== undefined) {
+        isCorrect = selectedAnswer.isAI;
+    }
+    
+    // Update score if correct
+    if (isCorrect) {
+        missionScore += currentMission.pointsPerQuestion;
+    }
+    
+    // Show feedback
+    showQuestionFeedback(isCorrect, question.explanation);
+    
+    // Disable all options
+    const options = document.querySelectorAll('.question-option');
+    options.forEach(option => {
+        option.style.pointerEvents = 'none';
+        option.style.opacity = '0.6';
+    });
+    
+    // Highlight selected option
+    const selectedElement = event.target.closest('.question-option');
+    selectedElement.style.borderColor = isCorrect ? 'var(--success)' : 'var(--error)';
+    selectedElement.style.opacity = '1';
+    
+    // Show next button or complete button
+    if (currentQuestionIndex < currentMission.questions.length - 1) {
+        document.getElementById('missionNextBtn').style.display = 'inline-flex';
+    } else {
+        document.getElementById('missionCompleteBtn').style.display = 'inline-flex';
+    }
+
+    // Show feedback, disable options, etc.
+    afterQuestionAnswered();
+}
+
+// Show question feedback
+function showQuestionFeedback(isCorrect, explanation) {
+    const feedbackElement = document.getElementById('questionFeedback');
+    const contentElement = document.getElementById('feedbackContent');
+    
+    const icon = isCorrect ? '✅' : '❌';
+    const color = isCorrect ? 'var(--success)' : 'var(--error)';
+    const status = isCorrect ? 'Correct!' : 'Not quite right';
+    
+    contentElement.innerHTML = `
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <span style="font-size: 24px;">${icon}</span>
+            <div>
+                <div style="font-weight: 600; color: ${color}; margin-bottom: 8px;">${status}</div>
+                <div style="color: var(--text-secondary); line-height: 1.6;">${explanation}</div>
+            </div>
+        </div>
+    `;
+    
+    feedbackElement.style.display = 'block';
+}
+
+// Move to next question
+function nextMissionQuestion() {
+    currentQuestionIndex++;
+    loadCurrentQuestion();
+}
+
+// Complete mission
+function completeMission() {
+    // Update user's total score
+    userTotalScore += missionScore;
+    localStorage.setItem('milScore', userTotalScore.toString());
+
+    // Show completion message
+    const completionHTML = `
+        <div style="text-align: center; padding: 40px;">
+            <div style="font-size: 4rem; margin-bottom: 16px;">🎉</div>
+            <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">Mission Complete!</h3>
+            <div style="font-size: 1.25rem; margin-bottom: 8px; color: var(--success);">+${missionScore} points earned</div>
+            <div style="color: var(--text-secondary); margin-bottom: 32px;">Total Score: ${userTotalScore} points</div>
+            <button class="btn btn-success" onclick="showMissionReviewPopup()" style="margin-bottom: 16px;">
+                Review Answers
+            </button>
+            <div style="display: flex; gap: 16px; justify-content: center;">
+                <button class="btn btn-success" onclick="returnToMissions()">
+                    <span>🏠</span>
+                    Back to Missions
+                </button>
+                <button class="btn btn-outline" onclick="navigateToPage('builder')">
+                    <span>⚡</span>
+                    Try Prompt Builder
+                </button>
+            </div>
+        </div>
+        <div id="missionReviewPopup" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
+            <div style="background:var(--bg-primary); border-radius:16px; max-width:600px; width:90%; margin:auto; padding:32px; box-shadow:0 8px 32px rgba(0,0,0,0.25); position:relative; border: 3px solid var(--accent);">
+                <button onclick="closeMissionReviewPopup()" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:1.5rem; cursor:pointer;">✖</button>
+                <h2 style="margin-bottom:24px; color:var(--text-primary);">Mission Review</h2>
+                <div id="missionReviewContent"></div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('missionContent').innerHTML = completionHTML;
+    document.getElementById('missionNextBtn').style.display = 'none';
+    document.getElementById('missionCompleteBtn').style.display = 'none';
+
+    // Update user score display
+    updateUserScore();
+
+    const missionKey = Object.keys(missions).find(key => missions[key] === currentMission);
+    updateMissionProgress(missionKey, currentMission.questions.length);
+}
+
+// Show mission review popup
+function showMissionReviewPopup() {
+    const reviewPopup = document.getElementById('missionReviewPopup');
+    const reviewContent = document.getElementById('missionReviewContent');
+    let html = '';
+
+    currentMission.questions.forEach((q, idx) => {
+        const newsUrl = q.newsUrl || '';
+        let answerLabel = '';
+        let answerMedia = '';
+
+        Object.keys(q.content).forEach(opt => {
+            const option = q.content[opt];
+            if (option.isCorrect || option.isAI) {
+                answerLabel = option.text || '';
+                if (option.img) {
+                    answerMedia = `<img src="${option.img}" alt="Answer Image" style="height:80px; width:80px; object-fit:cover; border-radius:8px; margin-bottom:8px;">`;
+                } else if (option.audio) {
+                    answerMedia = `<audio controls src="${option.audio}" style="width:180px; margin-bottom:8px;"></audio>`;
+                }
+            }
+        });
+
+        html += `
+            <div class="review-question-container" style="background:var(--bg-tertiary); border-radius:12px; margin-bottom:16px; border:1.5px solid var(--border-primary); box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                <button class="review-toggle-btn" onclick="toggleReviewDetails(${idx})"
+                    style="width:100%; text-align:left; background:none; border:none; padding:20px; font-size:1rem; font-weight:600; color:var(--accent); cursor:pointer;">
+                    Q${idx + 1}: ${q.question}
+                    <span id="review-arrow-${idx}" style="float:right; font-size:1.2rem;">▼</span>
+                </button>
+                <div id="review-details-${idx}" class="review-details-animated" style="padding:0 20px 20px 20px;">
+                    ${answerMedia}
+                    <div style="margin-bottom:8px; color:var(--success); font-weight:500;">Answer: ${answerLabel}</div>
+                    <div style="color:var(--text-secondary); font-size:14px; margin-bottom:8px;">${q.explanation}</div>
+                    ${newsUrl ? `<div><a href="${newsUrl}" target="_blank" style="color:var(--accent); text-decoration:underline; font-size:13px;">Related News</a></div>` : ''}
+                </div>
+            </div>
+        `;
+    });
+
+    reviewContent.innerHTML = `
+        ${html}
+        <div style="text-align:center; margin-top:32px;">
+            <button class="btn btn-success" onclick="closeMissionReviewPopup(); returnToMissions();">
+                ← Back to Missions
+            </button>
+        </div>
+    `;
+    reviewPopup.style.display = 'flex';
+
+    // Collapse all dropdowns when opening the popup
+    currentMission.questions.forEach((_, idx) => {
+        const details = document.getElementById(`review-details-${idx}`);
+        const arrow = document.getElementById(`review-arrow-${idx}`);
+        if (details) details.classList.remove('open');
+        if (arrow) arrow.textContent = '▼';
+    });
+}
+
+function toggleReviewDetails(idx) {
+    // Collapse all other dropdowns
+    currentMission.questions.forEach((_, i) => {
+        if (i === idx) return;
+        const details = document.getElementById(`review-details-${i}`);
+        const arrow = document.getElementById(`review-arrow-${i}`);
+        if (details && arrow) {
+            details.classList.remove('open');
+            arrow.textContent = '▼';
+        }
+    });
+
+    // Toggle the selected dropdown
+    const details = document.getElementById(`review-details-${idx}`);
+    const arrow = document.getElementById(`review-arrow-${idx}`);
+    if (!details.classList.contains('open')) {
+        details.classList.add('open');
+        arrow.textContent = '▲';
+    } else {
+        details.classList.remove('open');
+        arrow.textContent = '▼';
+    }
+}
+
+// Close mission review popup
+function closeMissionReviewPopup() {
+    document.getElementById('missionReviewPopup').style.display = 'none';
+}
+
+// Return to mission selection
+function returnToMissions() {
+    document.getElementById('missionSelection').style.display = 'block';
+    document.getElementById('missionInterface').style.display = 'none';
+    currentMission = null;
+}
+
+// Update user score display
+function updateUserScore() {
+    const scoreElement = document.getElementById('userScore');
+    if (scoreElement) {
+        scoreElement.textContent = userTotalScore;
+    }
+    highlightStatusCard(userTotalScore);
+}
+
+function highlightStatusCard(score) {
+    // Remove active from all
+    document.querySelectorAll('.status-card').forEach(card => card.classList.remove('active'));
+    // Determine status
+    if (score >= 250) {
+        document.getElementById('status-mil-expert').classList.add('active');
+    } else if (score >= 150) {
+        document.getElementById('status-critical-thinker').classList.add('active');
+    } else if (score >= 75) {
+        document.getElementById('status-ai-aware').classList.add('active');
+    } else {
+        document.getElementById('status-beginner').classList.add('active');
+    }
+}
+
+// Educational Content Hub functionality
+let currentFilter = 'all';
+
+// Filter content by category
+function filterContent(category) {
+    currentFilter = category;
+    
+    // Update active button
+    document.querySelectorAll('.content-category-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-category') === category) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Show/hide articles
+    document.querySelectorAll('.content-card').forEach(card => {
+        if (category === 'all' || card.classList.contains(category)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Article content database
+const articles = {
+    'bias': {
+        title: 'Understanding Data Bias in AI Systems',
+        category: 'AI Ethics',
+        readTime: '5 min read',
+        content: `
+            <h1>Understanding Data Bias in AI Systems</h1>
+            
+            <p><strong>What is Data Bias?</strong></p>
+            <p>Data bias occurs when AI training data doesn't accurately represent the real world or contains systematic prejudices. This leads to AI systems that make unfair or discriminatory decisions.</p>
+            
+            <p><strong>Types of Bias in AI:</strong></p>
+            <ul>
+                <li><strong>Historical Bias:</strong> Past discriminatory practices reflected in data</li>
+                <li><strong>Representation Bias:</strong> Certain groups underrepresented in training data</li>
+                <li><strong>Measurement Bias:</strong> Differences in how data is collected for different groups</li>
+                <li><strong>Evaluation Bias:</strong> Using inappropriate benchmarks for different populations</li>
+            </ul>
+            
+            <p><strong>Real-World Examples:</strong></p>
+            <p>• Facial recognition systems performing poorly on darker skin tones<br>
+            • Resume screening AI favoring male candidates<br>
+            • Language models associating certain professions with specific genders</p>
+            
+            <p><strong>How to Identify Bias:</strong></p>
+            <p>• Question if AI decisions seem unfair to certain groups<br>
+            • Look for patterns in AI errors<br>
+            • Ask about the diversity of training data<br>
+            • Test AI systems with diverse inputs</p>
+            
+            <p><strong>What You Can Do:</strong></p>
+            <p>• Report biased AI behavior when you encounter it<br>
+            • Advocate for diverse teams in AI development<br>
+            • Support organizations working on AI fairness<br>
+            • Stay informed about AI ethics and bias research</p>
+        `
+    },
+    'ip': {
+        title: 'Intellectual Property in the Age of AI',
+        category: 'AI Ethics',
+        readTime: '7 min read',
+        content: `
+            <h1>Intellectual Property in the Age of AI</h1>
+            
+            <p><strong>The New Frontier of Creativity</strong></p>
+            <p>As AI becomes capable of creating art, writing, music, and code, we face unprecedented questions about ownership, attribution, and copyright in the digital age.</p>
+            
+            <p><strong>Key Questions:</strong></p>
+            <ul>
+                <li>Who owns AI-generated content?</li>
+                <li>Should AI training data include copyrighted material?</li>
+                <li>How do we protect human creators' rights?</li>
+                <li>What constitutes fair use in AI training?</li>
+            </ul>
+            
+            <p><strong>Current Legal Landscape:</strong></p>
+            <p>• Most countries require human authorship for copyright<br>
+            • Training AI on copyrighted data raises legal concerns<br>
+            • Attribution becomes complex with AI assistance<br>
+            • New licensing models are emerging</p>
+            
+            <p><strong>Best Practices for Students:</strong></p>
+            <p>• Always disclose when AI helps with your work<br>
+            • Understand your school's AI usage policies<br>
+            • Respect original creators when using AI tools<br>
+             • Learn about Creative Commons and open licenses</p>
+            
+            <p><strong>Protecting Your Own Work:</strong></p>
+            <p>• Use watermarks or metadata in digital creations<br>
+            • Keep records of your creative process<br>
+            • Understand platform terms of service<br>
+            • Consider registering important works</p>
+        `
+    },
+    'inclusion': {
+        title: 'AI\'s Impact on Marginalized Communities',
+        category: 'AI & Society',
+        readTime: '8 min read',
+        content: `
+            <h1>AI's Impact on Marginalized Communities</h1>
+            
+            <p><strong>The Double-Edged Nature of AI</strong></p>
+            <p>AI technology can either perpetuate existing inequalities or become a powerful tool for social justice and inclusion, depending on how it's designed and deployed.</p>
+            
+            <p><strong>Potential Harms:</strong></p>
+            <ul>
+                <li>Biased hiring algorithms discriminating against minorities</li>
+                <li>Facial recognition systems with poor accuracy for certain ethnic groups</li>
+                <li>Language AI that doesn't understand cultural contexts</li>
+                <li>Healthcare AI trained primarily on data from privileged populations</li>
+            </ul>
+            
+            <p><strong>Opportunities for Good:</strong></p>
+            <ul>
+                <li>Translation tools preserving endangered languages</li>
+                <li>Accessibility AI helping people with disabilities</li>
+                <li>Educational AI providing personalized learning</li>
+                <li>Healthcare AI improving diagnosis in underserved areas</li>
+            </ul>
+            
+            <p><strong>Principles of Inclusive AI:</strong></p>
+            <p>• Diverse development teams<br>
+            • Community involvement in design<br>
+            • Cultural sensitivity testing<br>
+            • Transparent decision-making processes<br>
+            • Regular bias auditing</p>
+            
+            <p><strong>How Youth Can Make a Difference:</strong></p>
+            <p>• Advocate for inclusive AI in your community<br>
+            • Learn about different cultural perspectives<br>
+            • Question AI systems that seem unfair<br>
+            • Support diverse voices in technology</p>
+        `
+    },
+    'divide': {
+        title: 'The Digital Divide and AI Access',
+        category: 'AI & Society',
+        readTime: '6 min read',
+        content: `
+            <h1>The Digital Divide and AI Access</h1>
+            
+            <p><strong>Unequal Access to AI Benefits</strong></p>
+            <p>While AI promises to transform education, healthcare, and economic opportunities, unequal access to technology means these benefits may not reach everyone equally.</p>
+            
+            <p><strong>Barriers to AI Access:</strong></p>
+            <ul>
+                <li>Limited internet connectivity in rural areas</li>
+                <li>High costs of AI-powered devices and services</li>
+                <li>Lack of digital literacy and AI understanding</li>
+                <li>Language barriers in AI interfaces</li>
+                <li>Cultural and social barriers to technology adoption</li>
+            </ul>
+            
+            <p><strong>Economic Implications:</strong></p>
+            <p>• AI literacy becoming essential for future jobs<br>
+            • Widening gap between AI-savvy and traditional workers<br>
+            • Risk of further marginalizing underserved communities<br>
+            • Need for reskilling and education programs</p>
+            
+            <p><strong>Solutions and Initiatives:</strong></p>
+            <p>• Community tech centers and libraries<br>
+            • Mobile AI education programs<br>
+            • Partnerships between tech companies and schools<br>
+            • Open-source AI tools and resources<br>
+            • Government digital inclusion policies</p>
+            
+            <p><strong>What You Can Do:</strong></p>
+            <p>• Volunteer to teach tech skills in your community<br>
+            • Advocate for better internet infrastructure<br>
+            • Share AI knowledge with friends and family<br>
+            • Support organizations working on digital equity</p>
+        `
+    },
+    'education': {
+        title: 'AI in Education: Transforming Learning',
+        category: 'Future of AI',
+        readTime: '9 min read',
+        content: `
+            <h1>AI in Education: Transforming Learning</h1>
+            
+            <p><strong>The Learning Revolution</strong></p>
+            <p>AI is reshaping education by personalizing learning experiences, automating administrative tasks, and creating new ways for students and teachers to interact with knowledge.</p>
+            
+            <p><strong>Current Applications:</strong></p>
+            <ul>
+                <li>Adaptive learning platforms that adjust to student pace</li>
+                <li>AI tutoring systems for personalized help</li>
+                <li>Automated grading and feedback systems</li>
+                <li>Language learning with AI conversation partners</li>
+                <li>Accessibility tools for students with disabilities</li>
+            </ul>
+            
+            <p><strong>Benefits for Students:</strong></p>
+            <p>• Personalized learning paths<br>
+            • Immediate feedback and support<br>
+            • Access to AI tutors 24/7<br>
+            • Enhanced creativity tools<br>
+            • Better preparation for AI-integrated workplaces</p>
+            
+            <p><strong>Benefits for Teachers:</strong></p>
+            <p>• Automated administrative tasks<br>
+            • Data-driven insights about student progress<br>
+            • Enhanced teaching materials and resources<br>
+            • More time for human connection and mentoring</p>
+            
+            <p><strong>Challenges and Concerns:</strong></p>
+            <p>• Risk of over-dependence on AI<br>
+            • Privacy and data security issues<br>
+            • Need for teacher training and support<br>
+            • Ensuring equitable access across schools<br>
+            • Maintaining human elements in education</p>
+            
+            <p><strong>The Future of Learning:</strong></p>
+            <p>Education will likely become more flexible, personalized, and AI-augmented while preserving the essential human elements of teaching, creativity, and critical thinking.</p>
+        `
+    },
+    'trends': {
+        title: 'Emerging Trends in AI Technology',
+        category: 'Future of AI',
+        readTime: '10 min read',
+        content: `
+            <h1>Emerging Trends in AI Technology</h1>
+            
+            <p><strong>The Next Wave of Innovation</strong></p>
+            <p>AI technology continues to evolve rapidly, with new breakthroughs reshaping what's possible and creating new opportunities and challenges for society.</p>
+            
+            <p><strong>Current Breakthrough Areas:</strong></p>
+            <ul>
+                <li><strong>Multimodal AI:</strong> Systems that understand text, images, audio, and video together</li>
+                <li><strong>AI Agents:</strong> Autonomous systems that can plan and execute complex tasks</li>
+                <li><strong>Edge AI:</strong> AI processing directly on devices without internet</li>
+                <li><strong>Quantum AI:</strong> Combining quantum computing with machine learning</li>
+                <li><strong>Neuromorphic Computing:</strong> Brain-inspired AI hardware</li>
+            </ul>
+            
+            <p><strong>Emerging Applications:</strong></p>
+            <p>• AI-powered scientific discovery<br>
+            • Autonomous vehicles and robots<br>
+            • Personalized medicine and drug discovery<br>
+            • Climate modeling and environmental protection<br>
+            • Real-time language translation</p>
+            
+            <p><strong>Societal Implications:</strong></p>
+            <p>• Changing nature of work and employment<br>
+            • New forms of creativity and entertainment<br>
+            • Enhanced scientific research capabilities<br>
+            • Improved accessibility and inclusion<br>
+            • Need for new governance and ethics frameworks</p>
+            
+            <p><strong>Preparing for the Future:</strong></p>
+            <p>• Stay curious and keep learning<br>
+            • Develop both technical and human skills<br>
+            • Understand AI ethics and responsible use<br>
+            • Participate in conversations about AI's future<br>
+            • Build adaptability and critical thinking skills</p>
+            
+            <p><strong>Youth as AI Leaders:</strong></p>
+            <p>Young people have a unique opportunity to shape AI's future by bringing fresh perspectives, advocating for responsible development, and ensuring AI serves all of humanity.</p>
+        `
+    }
+};
+
+const missionConfig = {
+    'spot-fake': { total: 5, barId: 'progress-spot-fake', color: 'var(--success)' },
+    'ethics': { total: 4, barId: 'progress-ethics', color: 'var(--success)' },
+    'myths': { total: 6, barId: 'progress-myths', color: 'var(--success)' }
+};
+
+function updateMissionProgress(missionKey, completedCount) {
+    const config = missionConfig[missionKey];
+    if (!config) return;
+    const percent = Math.round((completedCount / config.total) * 100);
+    const bar = document.getElementById(config.barId);
+    const card = document.querySelector(`.mission-card[data-mission="${missionKey}"]`);
+    const progressText = card ? card.querySelector('.progress-text') : null;
+
+    if (bar) {
+        bar.style.width = percent + '%';
+        bar.style.background = config.color; // Always green for progress
+    }
+    if (progressText) {
+        progressText.textContent = `${completedCount}/${config.total} completed`;
+    }
+}
+
+// Call this after each question is answered
+function afterQuestionAnswered() {
+    // Only update if user answered a question
+    const missionKey = Object.keys(missions).find(key => missions[key] === currentMission);
+    updateMissionProgress(missionKey, currentQuestionIndex + 1);
+}
+
+// Example usage: call this after each question is completed
+// updateMissionProgress('spot-fake', 3); // 3 out of 5 completed
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize missions if on missions page
+    if (window.location.hash.includes('missions')) {
+        initializeMissions();
+    }
+    // Always highlight status card on load
+    highlightStatusCard(userTotalScore);
+});
+};
+
+
+and maybe could add these features
+Gamified MIL Missions
+
+Step 1: Choose a challenge.
+Mental Model: "I want to have fun and learn at the same time." (Alex) / "I need to quickly test my knowledge on a specific topic." (Budi)
+Say/Do: The user browses a list of mission cards like "Spot the Fake," "The Ethics Challenge," or "Myth Busters." They click on one that interests them.
+Pain Points: The user is bored with traditional text-based learning. They want an engaging, interactive way to apply their knowledge. For Alex, a lecture on misinformation is less effective than a hands-on exercise. For Budi, a static article about AI bias isn't as useful as a scenario-based challenge.
+How Might We: How might we make learning about complex topics like misinformation and AI ethics feel like an exciting and immediate challenge, not a chore?
+Making Learning Fun: UX/UI Solution
+This solution is designed to transform the often-dry topic of media and information literacy into an exciting, game-like experience. By focusing on a creative and interactive interface, we can make the first step—choosing a challenge—feel purposeful and engaging.
+
+UI/UX Flow
+The core of this solution is the Mission Hub, a visually rich dashboard that presents challenges as enticing "missions" rather than quizzes.
+Dashboard Layout: Upon entering the "Missions" section, the user is greeted by a dynamic, visually appealing hub. Instead of a simple list, the challenges are presented as distinct mission cards, each with a unique icon and vibrant colors that reflect its theme.
+The overall layout could resemble a game map or a science lab's control panel, depending on the app's aesthetic.
+Enticing Mission Cards: Each card is more than just a title. It's a miniature preview of the mission itself.
+Creative Titles: Titles like "Spot the Fake," "Deepfake Detector," or "Ethical Dilemma" are used instead of generic "Quiz 1," "Quiz 2."
+Visual Cues: Each card features a custom, high-quality icon. For example, a magnifying glass over a distorted image for "Spot the Fake" or a scale with a robot and a human for "The Ethics Challenge."
+Brief Description: A one-sentence description on each card summarizes the mission's objective, such as "Can you tell real from AI-generated? Put your skills to the test!" or "Navigate a moral maze and decide the future of AI."
+Encouraging Language: The language used across the hub is motivational and action-oriented. The primary call-to-action is "Start Mission," not "Take Quiz." This framing encourages users to see themselves as active participants on a quest, not just passive learners.
+Categorization & Filters: For users like Budi who want to find a specific challenge, missions can be filtered by topic (e.g., "AI Bias," "Online Manipulation," "Fact-Checking") or by difficulty level ("Novice," "Expert"). This allows users to quickly find the challenge that aligns with their needs and skill level, ensuring a personalized and efficient experience.
+
+Step 2: Take the quiz or challenge.
+Mental Model: "I'm ready to prove what I know." (Alex) / "Let's see if I can solve this problem." (Budi)
+Say/Do: The user interacts with the mission, such as identifying which of four images is AI-generated, or selecting the most ethical choice in a given scenario.
+Pain Points: The user might feel like the challenge is too easy or too difficult. They need an experience that feels authentic and relevant to real-world issues, not a simple true/false quiz.
+How Might We: How might we design the challenges to be engaging and realistic, accurately simulating the real-world complexities of the digital information landscape?
+Making Challenges Realistic: UX/UI Solution
+This solution is designed to make the missions feel like authentic, real-world scenarios rather than generic quizzes. By simulating the complexity and ambiguity of the digital world, we can create an engaging and truly educational experience.
+
+UI/UX Flow
+Scenario-Based Missions: Instead of asking a simple question, each mission begins by setting up a realistic scenario.
+"Deepfake Detector": A mission might start with a brief text describing a breaking news event and then present a short video clip. The user is then asked, "Is this video authentic or a deepfake?"
+"The Ethics Challenge": A mission might describe a hypothetical situation, such as an AI system making a biased recommendation. The user is then presented with a series of choices and asked, "What is the most ethical action to take?"
+Interactive Elements: The interaction goes beyond simple multiple-choice questions.
+Visual Quizzes: For "Spot the Fake," the user is presented with a grid of images. They must tap on the ones they believe are AI-generated. A timer could add pressure, simulating the fast pace of social media.
+Drag-and-Drop: For "Myth Busters," the user might be given a list of common AI misconceptions and must drag them into a "True" or "False" box.
+Hotspot Analysis: For a mission on misleading articles, the user could be presented with a screenshot of a news article. They are asked to click on parts of the text that are "suspicious" or "unverifiable."
+Variable Difficulty: The missions should have built-in variations to cater to different skill levels.
+Novice Mode: Simpler scenarios with more obvious clues. The user might be given three choices with a clear correct answer.
+Expert Mode: More subtle and nuanced scenarios. For "Deepfake Detector," the AI-generated video might be highly sophisticated, requiring the user to look for subtle artifacts. The user might also be asked to rank their choices or provide a short explanation for their answer.
+This tiered approach ensures the challenges are neither too easy for Budi nor too difficult for Alex.
+Authentic Content: All mission content, from images and videos to scenarios and text, should be carefully designed to mimic real-world examples of misinformation, disinformation, and AI-generated content. This grounded approach ensures that the skills the user learns are directly applicable to their daily digital life.
+
+
+Step 3: Receive feedback.
+Mental Model: "I need to know if I got it right and why." (Alex) / "I want to understand the solution, not just the answer." (Budi)
+Say/Do: The user receives immediate feedback after completing a mission. This includes whether their answer was correct or incorrect, along with a detailed explanation of why.
+Pain Points: Simply being told "correct" or "incorrect" isn't enough. Alex needs to understand the specific cues that reveal a deepfake. Budi wants to know the technical reasons behind an ethical dilemma. Without a clear explanation, the learning opportunity is lost.
+How Might We: How might we provide instant, comprehensive, and educational feedback that reinforces the user's learning and builds their expertise?
+Comprehensive Feedback: UX/UI Solution
+This solution is designed to make the feedback a central part of the learning experience, not just a simple score. By providing detailed, educational explanations, we reinforce the user's knowledge and build their expertise.
+
+UI/UX Flow
+The feedback is delivered in a dedicated screen immediately after the user completes a mission. The screen is designed to be both informative and visually engaging.
+Immediate Verdict: At the top of the screen, a clear visual indicates the user's result: a large, green checkmark for a correct answer or a red "X" for an incorrect one. A celebratory or encouraging message is displayed, such as "Correct!" or "Nice try!"
+Detailed Explanation Panel: This is the core of the feedback. Below the verdict, a collapsible or scrollable panel provides a full breakdown of the correct answer and the reasoning behind it.
+"Why it's a Deepfake": For a visual mission, the explanation panel would highlight specific cues within the image or video. For example, it might use red circles to point out a pixelated earlobe, a lack of blinking, or a subtle warping of the background, along with a brief text explanation for each.
+"The Ethical Breakdown": For an ethics mission, the panel would explain why the correct choice was the most ethical one, citing key principles like data privacy, fairness, or transparency. It would also explain the flaws in the other choices, helping the user understand the full complexity of the issue.
+Cross-Referencing to the Content Hub: The feedback is connected to the broader platform. Within the explanation, a link or button appears that says, "Learn more about [specific topic] in our Content Hub." This provides a direct path for users who want to dive deeper into a particular area, reinforcing the app as a comprehensive resource.
+Actionable Insights: The feedback concludes with a brief summary of the key takeaway. For example: "Remember, pay close attention to subtle visual artifacts and unnatural movements when trying to spot deepfakes." This gives the user a memorable, actionable tip they can apply in their daily life.
+
+
+Step 4: Earn points and see progress.
+Mental Model: "I'm getting better at this!" (Alex) / "My knowledge is improving, and I can see it." (Budi)
+Say/Do: The user sees their score increase, their rank on the leaderboard change, and badges appear on their profile.
+Pain Points: The user wants to see a tangible result of their effort. Without a visible reward system, the motivation to continue playing and learning can fade.
+How Might We: How might we create a rewarding system that visually tracks a user's progress and motivates them to continue learning and engaging with the platform?
+Creative Rewards: UX/UI Solution
+This solution is designed to create a rewarding and motivating experience that goes beyond a simple number score. By transforming progress into a visual and communal experience, we encourage users to keep learning and stay engaged with the platform.
+
+UI/UX Flow
+The rewards system is integrated into a central User Profile and a Community Leaderboard.
+Level-Up System with Evolving Avatars: Instead of just gaining points, users "level up" as they complete missions. Each level unlocks a new visual element for their personal avatar.
+Novice: The user starts with a simple, basic icon.
+Intermediate: As they gain experience, their avatar evolves, perhaps gaining more complexity, or a symbol of a magnifying glass or a shield.
+Master: At high levels, their avatar becomes a sophisticated, unique design, visually representing their expertise. This provides a clear, personal, and highly visual representation of progress.
+Collectible Badges & Certificates: For completing specific mission categories, users earn unique, collectible badges.
+For finishing all "Deepfake" missions, they get a "Truth Seeker" badge.
+For completing all "Ethics" missions, they get a "Digital Ethicist" badge.
+These badges are displayed on their profile. Reaching a certain milestone (e.g., completing 10 missions) could even generate a sharable "Certificate of Digital Literacy," which they can post on social media to show off their new skills.
+Real-Time Community Leaderboard: A dynamic leaderboard encourages healthy competition.
+Location & Peer-Based Ranking: The leaderboard isn't just a global list. Users can see their rank among friends, their country, or even their specific university. This creates a sense of community and provides a more realistic goal (e.g., "I'm in the top 10 at my school!").
+Points & Streaks: The leaderboard shows not only total points but also "daily streaks" for consecutive days of completing missions. This encourages daily engagement and turns learning into a fun habit.
+
+
+Step 5: Get motivated to play more.
+Mental Model: "I want to beat my last score and unlock the next challenge." (Alex) / "I'm a valuable member of this community and I want to keep contributing." (Budi)
+Say/Do: The user returns to the mission hub to try a new challenge or re-do a previous one to earn a higher score.
+Pain Points: The user loses interest because there is no clear path forward. They don't know what to do next or why they should continue using the app.
+How Might We: How might we provide a clear path for continued engagement and a sense of belonging to a community of like-minded learners?
+Creative Engagement: UX/UI Solution
+This solution is designed to make the user feel like a part of a community and provide a clear, compelling reason to keep returning to the platform. By connecting individual progress to a collective mission, we can encourage continued engagement and a sense of belonging.
+
+UI/UX Flow
+The solution focuses on two main areas: a personalized "path" for the user and a community-driven feature that makes their individual contributions feel more meaningful.
+Personalized Mission Path: Instead of just a list of missions, the interface presents a clear, linear path of recommended challenges. This helps users know exactly what to do next.
+Progression: Once a user completes a mission, a visual marker (e.g., a checkmark or a glowing orb) appears on the mission card. The next mission in the sequence is highlighted with a pulsing animation or a "New Mission" banner.
+Personalized Recommendations: Based on a user's performance or interests, the system can suggest a mission. For example, if Alex struggled with a deepfake mission, the app might suggest a related, but easier, "Spot the Fake" challenge. If Budi aced a coding challenge, the app could recommend a more complex one.
+Community-Driven Impact Board: This feature transforms individual efforts into a collective achievement.
+Visualizing the Impact: The main Mission Hub page features a prominent, real-time "Impact Board." It could be a visually engaging graphic showing the number of "Myths Busted," "Deepfakes Spotted," or "Ethical Dilemmas Solved" by the entire community.
+Feeling a Part of Something Bigger: When a user completes a mission, they see a brief animation showing their contribution being added to the board (e.g., a point flying from their screen to the central tally). This provides instant gratification and reinforces the idea that their personal actions have a collective impact. A small message like, "You just contributed to 1,542 ethical decisions!" connects their effort to a larger purpose, tapping into their motivation to protect their community. also still use HTML and CSS
